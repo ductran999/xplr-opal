@@ -10,5 +10,9 @@ help: ## Show help for each of the Makefile commands
 
 
 .PHONY: demo
-demo: ## Start demo
+setup: ## Setup keycloak, opal for demo
 	@docker compose up -d
+
+.PHONY: run
+run: ## Run app 
+	go run cmd/main.go
