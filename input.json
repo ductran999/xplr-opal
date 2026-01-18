@@ -1,0 +1,11 @@
+{
+  "user": {
+    "id": "u123",
+    "roles": ["user"]
+  },
+  "action": "list",
+  "resource": {
+    "type": "todo",
+    "owner_id": "u123"
+  }
+}

@@ -16,3 +16,12 @@ setup: ## Setup keycloak, opal for demo
 .PHONY: run
 run: ## Run app 
 	go run cmd/main.go
+
+.PHONY: api
+api: ## Auto generate api code from openapi.yml
+	@echo "==> Generating API code from OpenAPI spec"
+	mkdir -p ./api/generated
+	rm -f ./api/generated/*
+	go get github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen
+	go generate ./...
+	go mod tidy

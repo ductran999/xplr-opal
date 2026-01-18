@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: Todo Service
+  description: The API contract for Todo service.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      tags: [system]
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /todos:
+    get:
+      summary: List todos
+      description: List all todos visible to the user
+      operationId: listTodos
+      tags: [todo]
+      # x-authz-action: todo:list
+      responses:
+        "200":
+          description: List of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Todo"
+
+components:
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id:
+          type: string
+          example: todo_123
+        title:
+          type: string
+          example: Write OpenAPI spec
+        completed:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time

@@ -8,10 +8,23 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+func isNoAuthPath(c *gin.Context) bool {
+	if strings.HasPrefix(c.Request.URL.Path, "/health") {
+		return true
+	}
+
+	return false
+}
+
 func JWTAuthMiddleware(jwksURL, issuer, audience string) gin.HandlerFunc {
 	keySet := jwkCache(jwksURL)
 
 	return func(c *gin.Context) {
+		if isNoAuthPath(c) {
+			c.Next()
+			return
+		}
+
 		auth := c.GetHeader("Authorization")
 		if auth == "" {
 			c.AbortWithStatusJSON(401, gin.H{"error": "missing token"})
