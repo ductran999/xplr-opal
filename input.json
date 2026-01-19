@@ -1,11 +1,11 @@
 {
   "user": {
-    "id": "u123",
+    "id": "189512da-360e-4e68-85bc-3d1b4f80b68f",
     "roles": ["user"]
   },
   "action": "list",
   "resource": {
     "type": "todo",
-    "owner_id": "u123"
+    "owner_id": "189512da-360e-4e68-85bc-3d1b4f80b68f"
   }
 }
