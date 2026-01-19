@@ -2,24 +2,12 @@ package todos
 
 import rego.v1
 
-default allow := false
-
-# Admins can list all todos
-allow if {
-	"admin" in input.user.roles
-}
-
-# Users can list their own todos
-allow if {
+# Fetch data from an external API
+workspaces := res.body if {
 	input.user.id == input.resource.owner_id
 	input.resource.type == "todo"
 	"user" in input.user.roles
 	input.action == "list"
-}
-
-# Fetch data from an external API
-workspaces := res.body if {
-	allow
 
 	res := http.send({
 		"method": "GET",
@@ -31,6 +19,5 @@ workspaces := res.body if {
 }
 
 decision := {
-	"allow": allow,
 	"workspaces": workspaces,
 }
