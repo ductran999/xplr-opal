@@ -19,6 +19,8 @@ allow if {
 
 # Fetch data from an external API
 workspaces := res.body if {
+	allow
+
 	res := http.send({
 		"method": "GET",
 		"url": sprintf("http://localhost:10012/workspaces?user_id=%s", [input.user.id]),
