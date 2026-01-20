@@ -6,7 +6,7 @@ import rego.v1
 workspaces := res.body if {
 	res := http.send({
 		"method": "GET",
-		"url": sprintf("http://localhost:10012/workspaces?user_id=%s", [input.user.id]),
+		"url": sprintf("http://host.docker.internal:10012/workspaces?user_id=%s", [input.user.id]),
 		"force_json_decode": true,
 	})
 
