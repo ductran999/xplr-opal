@@ -10,6 +10,7 @@ import (
 
 type OPAClient interface {
 	Allow(ctx context.Context, resource string, input any) (bool, error)
+	Workspaces(ctx context.Context, resource string, input any) ([]string, error)
 }
 
 type opaClient struct {
@@ -55,4 +56,40 @@ func (o *opaClient) Allow(ctx context.Context, resource string, input any) (bool
 	}
 
 	return out.Result, nil
+}
+
+func (o *opaClient) Workspaces(ctx context.Context, resource string, input any) ([]string, error) {
+	body, _ := json.Marshal(map[string]any{
+		"input": input,
+	})
+
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodPost,
+		fmt.Sprintf("%s/v1/data/%s/workspaces", o.BaseURL, resource),
+		bytes.NewReader(body),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := o.Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var out struct {
+		Result struct {
+			Message    string   `json:"message"`
+			Workspaces []string `json:"workspaces"`
+		} `json:"result"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return nil, err
+	}
+
+	return out.Result.Workspaces, nil
 }

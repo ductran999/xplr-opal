@@ -51,8 +51,26 @@ func (a *App) ListTodos(c *gin.Context) {
 		return
 	}
 
+	ws, err := a.opaClient.Workspaces(c.Request.Context(), "todos", input)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    "AUTHZ_ERROR",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	if len(ws) == 0 {
+		c.JSON(http.StatusForbidden, gin.H{
+			"code":    "WORKSPACE_FORBIDDEN",
+			"message": "You do not have permission to access this resource on any workspaces",
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"id":          uuid.New(),
+		"workspaces":  ws,
 		"description": "homework",
 	})
 }

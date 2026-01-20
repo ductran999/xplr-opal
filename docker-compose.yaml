@@ -56,6 +56,5 @@ services:
       - opal_server
     command: sh -c "exec ./wait-for.sh opal_server:7002 --timeout=20 -- ./start.sh"
 
-
 volumes:
   kc_data:
